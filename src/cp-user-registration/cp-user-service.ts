@@ -8,18 +8,18 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 const userTable = process.env.TableName_user_cp;
 
 const connectionTable = process.env.TableName_cp_detail;
-let encryptAndDecrypt:EncryptionAndDecryption  = new EncryptionAndDecryption();
+
 
 @Injectable()
 export class CpUserService {
 
 
-  constructor() {
+  constructor(private encryptAndDecrypt:EncryptionAndDecryption ) {
 
   }
 
   async createCpUser(CpUser: AddCpUserType):Promise<AddCpUserType> {
-    let password:any= encryptAndDecrypt.encrypt(CpUser.new_password);
+    let password:any= this.encryptAndDecrypt.encrypt(CpUser.new_password);
     let availablity:any = JSON.parse(CpUser.availability);
     let key:string = uuid();
        const userData = {
