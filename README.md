@@ -1,0 +1,1 @@
+It is a sample project of using nestjs in serverless. I have used Lambda and dynamodb in this project.
