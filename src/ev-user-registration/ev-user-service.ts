@@ -5,7 +5,7 @@ import { EncryptionAndDecryption } from '../common/EncryptionAndDecryption';
 import { v4 as uuid } from 'uuid';
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-let encryptAndDecrypt:EncryptionAndDecryption  = new EncryptionAndDecryption();
+
 const userTable = process.env.TableName_user_ev;
 
 const cardTable = process.env.TableName_user_ev_cards;
@@ -14,10 +14,10 @@ const cardTable = process.env.TableName_user_ev_cards;
 export class EvUserService {
 
  
-  constructor() {}
+constructor(private encryptAndDecrypt: EncryptionAndDecryption ){}
 
   async createEvUser(EvUser: AddEvUserType): Promise<AddEvUserType> {
-    let password = encryptAndDecrypt.encrypt(EvUser.new_password);
+    let password = this.encryptAndDecrypt.encrypt(EvUser.new_password);
     let key:string = uuid();
     
            const userDetails = {
