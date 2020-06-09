@@ -7,6 +7,7 @@ import {ApiModule} from './api-module';
 import {CpUserModule} from './cp-user-registration/cp-user-module';
 import { CpSearchModule } from './cp-search/cp-user-module';
 import {BillModule} from './bill-calculation/bill.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import {BillModule} from './bill-calculation/bill.module';
     CpUserModule,
     CpSearchModule,
     BillModule,
+    CommonModule,
     GraphQLModule.forRoot({
       autoSchemaFile: true,
       }),
