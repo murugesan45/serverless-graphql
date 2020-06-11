@@ -16,6 +16,7 @@ export class CpUserResolvers {
 async addCpOwnerRegistration(@Args('input') input: AddCpUserType){
   return await this.CpUserService.createCpUser(input);
 }
+
 @Query(()=> [CpUserLocation] )
 async locationSearch(@Args('location') location: string)
 {

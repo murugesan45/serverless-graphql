@@ -2,22 +2,23 @@ import { ObjectType,Field } from "@nestjs/graphql";
 
 @ObjectType()
 export class EvUserType{
-    @Field()
-    Id                 : String;
+
     @Field() 
-    user_name          : String;
+    userName           : String;
     @Field() 
-    mobile_number      : String;
+    mobileNumber       : String;
     @Field() 
     mail               : String;
     @Field() 
-    new_password       : String;
+    newPassword        : String;
     @Field() 
-    confirm_password   : String;
+    confirmPassword    : String;
     @Field() 
-    name_on_card       : String;
+    nameOnCard         : String;
     @Field() 
-    card_no            : String;
+    cardNo             : String;
     @Field() 
-    expiry_date        : String;
+    expiryDate         : String;
+    @Field()
+    location           : String;
 }

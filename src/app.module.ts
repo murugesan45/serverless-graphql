@@ -5,9 +5,10 @@ import { EvUserModule } from './ev-user-registration/ev-user-module';
 import { GraphQLModule } from '@nestjs/graphql';
 import {ApiModule} from './api-module';
 import {CpUserModule} from './cp-user-registration/cp-user-module';
-import { CpSearchModule } from './cp-search/cp-user-module';
+import { CpSearchModule } from './cp-search/cp.search.module';
 import {BillModule} from './bill-calculation/bill.module';
 import { CommonModule } from './common/common.module';
+import { CpBookingModule } from './cp-booking-status/cp.booking.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CommonModule } from './common/common.module';
     CpSearchModule,
     BillModule,
     CommonModule,
+    CpBookingModule,
     GraphQLModule.forRoot({
       autoSchemaFile: true,
       }),

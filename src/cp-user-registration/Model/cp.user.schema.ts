@@ -2,18 +2,16 @@ import { ObjectType,Field } from "@nestjs/graphql";
 
 @ObjectType()
 export class CpUserType{
-    @Field()
-    Id                 : String;
     @Field() 
-    username           : String;
+    userName           : String;
     @Field() 
     mobile             : String;
     @Field() 
     mail               : String;
     @Field() 
-    new_password       : String;
+    newpassword       : String;
     @Field() 
-    confirm_password   : String;
+    confirmPassword   : String;
     @Field(type=>[String]) 
     connector_type     : String[];
     @Field() 

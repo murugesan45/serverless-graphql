@@ -13,9 +13,9 @@ import {CpUserService} from './cp-user-service';
     constructor(private service: CpUserService ){}
   
     @Get()
-    showCommentsByIdea() {
+    user() {
 
-      return this.service.findCpUser('location');
+      return "Works";
     }
   
   }

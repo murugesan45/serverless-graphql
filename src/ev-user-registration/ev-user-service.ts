@@ -1,60 +1,52 @@
 import { Injectable } from '@nestjs/common';
-import { EvUserType} from './Model/evuser-schema';
 import {AddEvUserType} from './Model/mutation.schema';
 import { EncryptionAndDecryption } from '../common/EncryptionAndDecryption';
-import { v4 as uuid } from 'uuid';
+
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-
-const userTable = process.env.TableName_user_ev;
-
-const cardTable = process.env.TableName_user_ev_cards;
 
 @Injectable()
 export class EvUserService {
 
- 
-constructor(private encryptAndDecrypt: EncryptionAndDecryption ){}
+ constructor(private encrypt: EncryptionAndDecryption){}
 
   async createEvUser(EvUser: AddEvUserType): Promise<AddEvUserType> {
-    let password = this.encryptAndDecrypt.encrypt(EvUser.new_password);
-    let key:string = uuid();
-    
-           const userDetails = {
-              TableName: userTable,
+    let password = this.encrypt.encrypt(EvUser.newPassword);
+       const userDetails = {
+              TableName: 'User',
               Item: {
-                  ID               :  key, 
-                  User_name        :  EvUser.user_name,
-                  Mobile_number    :  EvUser.mobile_number,
-                  Mail             :  EvUser.mail,
-                  Password         :  password
+                  ID               :  EvUser.mail, 
+                  UserName         :  EvUser.userName,
+                  MobileNumber     :  EvUser.mobileNumber,
+                  EVPassword       :  password
               }
            };
            const cardDetails = {
-              TableName: cardTable,
+              TableName: 'Payment',
               Item: {
-                  ID               :  key,
-                  Name_on_card     :  EvUser.name_on_card,
-                  Card_no          :  EvUser.card_no, 
-                  Expiry_date      :  EvUser.expiry_date
+                  ID               :  EvUser.mail,
+                  NameOnCard       :  EvUser.nameOnCard,
+                  CardNo           :  EvUser.cardNo, 
+                  ExpiryDate       :  EvUser.expiryDate,
+                  Location         :  EvUser.location
               }
            };
             
       
-              await dynamodb.put(userDetails);
-              await dynamodb.put(cardDetails);
+              await dynamodb.put(userDetails).promise();
+              await dynamodb.put(cardDetails).promise();
      return EvUser;
     
    }
 
-  async findUser( Mail: string): Promise<String> {
+  async findUser( ID: string): Promise<String> {
     let params = {
-      TableName: userTable,
+      TableName: 'User',
       Key: {
-         Mail      
+         ID
        }
     } 
-    const user = await dynamodb.get(params).promise()
+    const user = await dynamodb.get(params).promise();
        if(user)
           return "The user exists";
        return "The user does not exists";

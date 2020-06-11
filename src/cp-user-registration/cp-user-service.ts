@@ -1,49 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { AddCpUserType } from './Model/mutation.schema';
 import { EncryptionAndDecryption } from '../common/EncryptionAndDecryption';
-import { v4 as uuid } from 'uuid';
+
 import {CpUserLocation} from './Model/cp.user.location';
+
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-const userTable = process.env.TableName_user_cp;
-
-const connectionTable = process.env.TableName_cp_detail;
 
 
 @Injectable()
 export class CpUserService {
 
-
-  constructor(private encryptAndDecrypt:EncryptionAndDecryption ) {
-
-  }
+  constructor(private encrypt: EncryptionAndDecryption ) {}  
 
   async createCpUser(CpUser: AddCpUserType):Promise<AddCpUserType> {
-    let password:any= this.encryptAndDecrypt.encrypt(CpUser.new_password);
+
+    let password:any= this.encrypt.encrypt(CpUser.newPassword);
     let availablity:any = JSON.parse(CpUser.availability);
-    let key:string = uuid();
        const userData = {
-          TableName: userTable,
+          TableName: 'User',
           Item: {
-              ID               :  key, 
-              Username         :  CpUser.username,
+              ID               :  CpUser.mail, 
+              Username         :  CpUser.userName,
               Mobile           :  CpUser.mobile,
-              Mail             :  CpUser.mail,
-              Password         :  password,
+              CpPassword       :  password,
              
           }
        };
        const connectionData = {
-          TableName: connectionTable,
+          TableName: 'ChargePoint',
           Item: {
-              ID               :  key, 
-              Connector_type   :  CpUser.connector_type,
-              Current_type     :  CpUser.current_type,
-              Availablity_from :  availablity.from,
-              Availablity_to   :  availablity.to,
+              ID               :  CpUser.mail, 
+              ConnectorType    :  CpUser.connectorType,
+              CurrentType      :  CpUser.currentType,
+              AvailablityFrom  :  availablity.from,
+              AvailablityTo    :  availablity.to,
               Price            :  CpUser.price,
               Amenities        :  CpUser.amentities,
-              Address          :  CpUser.Location
+              Address          :  CpUser.Location,
+              RequestStatus    :  "Available",
+              Request          :  "No requests"
           }
        };
     
@@ -57,8 +53,7 @@ export class CpUserService {
     }
     async findCpUser(location:string):Promise<CpUserLocation>{
       const params = {
-        TableName : connectionTable,
-      
+        TableName : 'ChargePoint',
         FilterExpression: 'contains(#Address, :Address)',
         ExpressionAttributeNames: {
           "#Address": "Address",

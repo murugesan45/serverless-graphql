@@ -1,31 +1,30 @@
-import { InputType,Field } from "@nestjs/graphql";
+import { InputType,Field, Float } from "@nestjs/graphql";
 
 @InputType()
 export class AddCpUserType{
-    @Field()
-    Id                 : String;
+    
     @Field() 
-    username           : String;
+    userName          : String;
     @Field() 
-    mobile             : String;
+    mobile            : String;
     @Field() 
     mail               : String;
     @Field() 
-    new_password       : String;
+    newPassword       : String;
     @Field() 
-    confirm_password   : String;
+    confirmPassword   : String;
     @Field(type=>[String]) 
-    connector_type     : String[];
+    connectorType     : String[];
     @Field() 
-    current_type       : String;
+    currentType       : String;
     @Field() 
     availability       : string;
-    @Field()
-    price              : String;
+    @Field(type=>Float)
+    price              : number;
     @Field(type=>[String])
     amentities         : String[];
     @Field()
-    Location            :string;
+    Location           :string;
 }
 
 

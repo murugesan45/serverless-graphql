@@ -1,13 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { BillInputs } from './Model/input.type';
 import { Bill } from './Model/bill.result';
-import { v4 as uuid } from 'uuid';
-
 const moment = require('moment');
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-const userTable = process.env.TableName_user_cp;
-const connectionTable = process.env.TableName_cp_detail;
+
 
 
 @Injectable()
@@ -16,8 +13,8 @@ export class BillService {
 
   async generateBill(inputs : BillInputs): Promise<Bill> {
 
-
-    let start = inputs.StartDate + ' ' + inputs.From;
+        let ID = inputs.ID;
+        let start = inputs.StartDate + ' ' + inputs.From;
         let end = inputs.EndDate + ' ' + inputs.To;
         let format =  ["YYYY-MM-DD hh:mm A"];
         let startDate = moment(start, format);
@@ -31,12 +28,11 @@ export class BillService {
         let chargingCost = consumption * price / 100;
         let tax = chargingCost * 20/100;
         let amount = chargingCost + tax;
-
+        
         const params = {
-            TableName: 'Bill_details',
+            TableName: 'Payment',
             Item: {
-                ID               :  uuid(), 
-                CpId             :  inputs.ID,
+                CpId             :  ID,
                 StartDate        :  inputs.StartDate,
                 EndDate          :  inputs.EndDate,
                 DurationCharged  :  duration,
@@ -47,7 +43,20 @@ export class BillService {
            }
          };
          console.log(params);
-          await dynamodb.put(params).promise();
+         await dynamodb.put(params).promise();
+
+         let param: any =  {
+          TableName: 'ChargePoint',
+          Key:{
+            ID
+          },
+         UpdateExpression: "set RequestStatus=:status",  
+         ExpressionAttributeValues:{
+          ":status" : 'Available'
+           }
+        };
+        await dynamodb.update(param).promise();
+        
         return{
             Consumption     : consumption,
             Duration        : duration,

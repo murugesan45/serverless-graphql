@@ -10,9 +10,9 @@ export class CpUserLocation{
     @Field() 
     availability       : string;
     @Field()
-    price              : String;
+    price              :  String;
     @Field(type=>[String])
-    amentities         : String[];
+    amentities         :  String[];
     @Field()
-    Location            :string;
+    Location            : String;
 }

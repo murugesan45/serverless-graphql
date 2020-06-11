@@ -9,7 +9,7 @@ import {AddEvUserType} from './Model/mutation.schema';
 export class EvUserResolvers {
   constructor(private  EvUserService: EvUserService) {}
 
- @Query(()=> EvUserType)
+ @Query(()=> String)
  async checkUser(@Args('email') email : string){
    return await this.EvUserService.findUser(email);
    }

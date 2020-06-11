@@ -4,13 +4,14 @@ import {
   } from '@nestjs/common';
   
   @Controller('/evuser')
-  export class EvUserController {
+  export class CpSearchController {
 
     constructor(){}
   
     @Get()
-    user() {
-     return "works";
+    search() {
+
+      return "search method is working";
     }
   
   }
